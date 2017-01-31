@@ -5,12 +5,12 @@ require.config({
     }
 });
 
-// グラフの描画
+// 円グラフの描画
 require(
   [
     'echarts',
     'echarts/chart/pie', // 円グラフの読み込み
-    'echarts/chart/funnel'
+    'echarts/chart/funnel' // toolbox内で切り替えるため読み込みます
   ],
   function (ec) {
 
@@ -41,9 +41,9 @@ require(
           fontSize: 20,
         },
         orient : 'vertical',
-        x : '70%',  // 位置を変更できます
+        x : '75%',  // 位置を変更できます
         y : '20%',
-        data:['Living','Kitchen','Desk Area','Bed Area','Toilet']
+        data: ['カレーライス','ハヤシライス','オムライス','チキンライス','タコライス']
       },
       
       // ツールボックス(他にも色々な機能がありますのでドキュメントを参照して下さい)
@@ -51,7 +51,12 @@ require(
         show : true,
         x : 300,
         feature : {
-          dataView : {show: true, title: 'データの表示', readOnly: false},
+          dataView : {
+            show: true, 
+            title: 'データの表示', 
+            readOnly: false,
+            lang: ['データの表示','閉じる','更新']
+          },
           magicType : {
             show: true, 
             title: {  // デフォルトだと中国語なので日本語を設定
@@ -82,17 +87,134 @@ require(
           name:'項目名',
           type:'pie', //グラフ指定
           data:[
-            {value:335, name:'Living'},
-            {value:310, name:'Kitchen'},
-            {value:234, name:'Desk Area'},
-            {value:135, name:'Bed Area'},
-            {value:1548, name:'Toilet'}
+            {value:335, name:'カレーライス'},
+            {value:310, name:'ハヤシライス'},
+            {value:234, name:'オムライス'},
+            {value:135, name:'チキンライス'},
+            {value:1548, name:'タコライス'}
           ]
         }
       ]
     };
     // オプションをインスタンスに適用
     pieChart.setOption(pieOption); 
+  }
+);
+
+
+// 棒グラフの描画
+require(
+  [
+    'echarts',
+    'echarts/chart/bar', // 棒グラフの読み込み
+    'echarts/chart/line' // toolbox内で切り替えるため読み込みます
+  ],
+  function (ec) {
+
+    var barChart = ec.init(document.getElementById('bar-chart')); // 表示する場所のID
+
+    // オプションの設定
+    var barOption = {
+
+      // グラフタイトル
+      title : {
+        text: 'Bar-Chart',
+        x:'center'
+      },
+      
+      // カーソルを重ねた際の情報
+      tooltip : {
+        trigger: 'axis',
+      },
+
+      // 凡例
+      legend: {
+        textStyle: {
+          fontWeight: 'bolder',
+          fontSize: 20,
+        },
+        orient : 'vertical',
+        x : '75%',  // 位置を変更できます
+        y : '20%',
+        data:['降水量','湿度']
+      },
+      
+      // ツールボックス(他にも色々な機能がありますのでドキュメントを参照して下さい)
+      toolbox: {
+        show : true,
+        x : 300,
+        feature : {
+          dataView : {
+            show: true, 
+            title: 'データの表示', 
+            readOnly: false,
+            lang: ['データの表示','閉じる','更新']
+          },
+          magicType : {
+            show: true, 
+            title: {  // デフォルトだと中国語なので日本語を設定
+              bar : '棒グラフ',
+              line : '折れ線グラフ'
+            },
+            type: ['bar', 'line'],
+          },
+          restore : {show: true, title: '更新'},
+          saveAsImage : {show: true, title: '画像保存'}
+        }
+      },
+
+      // インタラクティブな操作を有効にする
+      calculable : true,
+
+      // データ
+      xAxis : [ // x軸
+        {
+          type : 'category',
+          data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+        }
+      ],
+      yAxis : [ //y軸
+        {
+          type : 'value'
+        }
+      ],
+      series : [
+        {
+          name:'湿度',
+          type:'bar',
+          data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          markPoint : {
+            data : [
+              {type : 'max', name: '最大值'},
+              {type : 'min', name: '最小值'}
+            ]
+          },
+          markLine : {
+            data : [
+                {type : 'average', name: '平均值'}
+            ]
+          }
+        },
+        {
+          name:'降水量',
+          type:'bar',
+          data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+          markPoint : {
+            data : [
+              {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183, symbolSize:18},
+              {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
+            ]
+          },
+          markLine : {
+            data : [
+              {type : 'average', name : '平均值'}
+            ]
+          }
+        }
+      ]
+    };
+    // オプションをインスタンスに適用
+    barChart.setOption(barOption); 
   }
 );
 
