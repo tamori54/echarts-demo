@@ -219,121 +219,121 @@ require(
 );
 
 
-// use
+// 折れ線グラフの描画
 require(
-    [
-        'echarts',
-        'echarts/chart/pie' // require the specific chart type
-    ],
-    function (ec) {
-        // Initialize after dom ready
-        var barChart = ec.init(document.getElementById('bar-chart')); 
-        
-        var option = {
-          color : ['rgba(0,0,0,0.52)','rgba(255,0,0,0.52)','rgba(0,0,255,0.52)','rgba(0,153,0,0.52)','rgba(255,255,0,0.52)'],
-          title : {
-              text: 'Area',
-              x:'center'
+  [
+    'echarts',
+    'echarts/chart/line', // 折れ線グラフの読み込み
+    'echarts/chart/bar' // toolbox内で切り替えるため読み込みます
+  ],
+  function (ec) {
 
-          },
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            fontWeight: 'bolder',
-            fontSize: 20,
-            fontStyle: 'italic',
-            color: '#fff',
-            shadowColor : '#fff', //默认透明
-            shadowBlur: 10
+    var lineChart = ec.init(document.getElementById('line-chart')); // 表示する場所のID
+
+    // オプションの設定
+    var lineOption = {
+
+      // グラフタイトル
+      title : {
+        text: 'Line-Chart',
+        x:'center'
+      },
+      
+      // カーソルを重ねた際の情報
+      tooltip : {
+        trigger: 'axis',
+      },
+
+      // 凡例
+      legend: {
+        textStyle: {
+          fontWeight: 'bolder',
+          fontSize: 20,
         },
-              orient : 'vertical',
-              x : '30%',
-              y : '20%',
-              data:['Living','Kitchen','Desk Area','Bed Area','Toilet']
+        orient : 'vertical',
+        x : '75%',  // 位置を変更できます
+        y : '20%',
+        data:['最低気温','最高気温']
+      },
+      
+      // ツールボックス(他にも色々な機能がありますのでドキュメントを参照して下さい)
+      toolbox: {
+        show : true,
+        x : 300,
+        feature : {
+          dataView : {
+            show: true, 
+            title: 'データの表示', 
+            readOnly: false,
+            lang: ['データの表示','閉じる','更新']
           },
-          
-          calculable : true,
-          series : [
-              {
-                  name:'Exist Area',
-                  type:'pie',
-                  radius : '70%',
-                  center: ['50%', '50%'],
-                  data:[
-                      {value:335, name:'Living'},
-                      {value:310, name:'Kitchen'},
-                      {value:234, name:'Desk Area'},
-                      {value:135, name:'Bed Area'},
-                      {value:1548, name:'Toilet'}
-                  ]
-              }
-          ]
-      };
-
-        // Load data into the ECharts instance 
-        barChart.setOption(option); 
-    }
-);
-
-// use
-require(
-    [
-        'echarts',
-        'echarts/chart/pie' // require the specific chart type
-    ],
-    function (ec) {
-        // Initialize after dom ready
-        var lineChart = ec.init(document.getElementById('line-chart')); 
-        
-        var option = {
-          color : ['rgba(0,0,0,0.52)','rgba(255,0,0,0.52)','rgba(0,0,255,0.52)','rgba(0,153,0,0.52)','rgba(255,255,0,0.52)'],
-          title : {
-              text: 'Area',
-              x:'center'
-
+          magicType : {
+            show: true, 
+            title: {  // デフォルトだと中国語なので日本語を設定
+              line : '折れ線グラフ',
+              bar : '棒グラフ'
+            },
+            type: ['bar', 'line'],
           },
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
+          restore : {show: true, title: '更新'},
+          saveAsImage : {show: true, title: '画像保存'}
+        }
+      },
+
+      // インタラクティブな操作を有効にする
+      calculable : true,
+
+      // データ
+      xAxis : [ // x軸
+        {
+          type : 'category',
+          data : ['月','火','水','木','金','土','日']
+        }
+      ],
+      yAxis : [ //y軸
+        {
+          type : 'value',
+          axisLabel : {
+            formatter: '{value} ℃'
+          }
+        }
+      ],
+      series : [
+        {
+          name:'最高気温',
+          type:'line',
+          data:[11, 11, 15, 13, 12, 13, 10],
+          markPoint : {
+            data : [
+              {type : 'max', name: '最大值'},
+              {type : 'min', name: '最小值'}
+            ]
           },
-          legend: {
-            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            fontWeight: 'bolder',
-            fontSize: 20,
-            fontStyle: 'italic',
-            color: '#fff',
-            shadowColor : '#fff', //默认透明
-            shadowBlur: 10
+          markLine : {
+            data : [
+                {type : 'average', name: '平均值'}
+            ]
+          }
         },
-              orient : 'vertical',
-              x : '30%',
-              y : '20%',
-              data:['Living','Kitchen','Desk Area','Bed Area','Toilet']
+        {
+          name:'最低気温',
+          type:'line',
+          data:[1, -2, 2, 5, 3, 2, 0],
+          markPoint : {
+            data : [
+              {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+            ]
           },
-          
-          calculable : true,
-          series : [
-              {
-                  name:'Exist Area',
-                  type:'pie',
-                  radius : '70%',
-                  center: ['50%', '50%'],
-                  data:[
-                      {value:335, name:'Living'},
-                      {value:310, name:'Kitchen'},
-                      {value:234, name:'Desk Area'},
-                      {value:135, name:'Bed Area'},
-                      {value:1548, name:'Toilet'}
-                  ]
-              }
-          ]
-      };
-
-        // Load data into the ECharts instance 
-        lineChart.setOption(option); 
-    }
+          markLine : {
+            data : [
+              {type : 'average', name : '平均值'}
+            ]
+          }
+        }
+      ]
+    };
+    // オプションをインスタンスに適用
+    lineChart.setOption(lineOption); 
+  }
 );
 
